@@ -166,25 +166,23 @@ const autenticarUsuarioGoogle = async (id_google, contentType, dados = {}) => {
     let message = JSON.parse(JSON.stringify(config_message))
 
     try {
-        // Valida o formato da requisição
-        if(String(contentType).toLowerCase() != 'application/json') return message.ERROR_CONTENT_TYPE // Status code 415
+        if(String(contentType).toLowerCase() != 'application/json') return message.ERROR_CONTENT_TYPE
 
-        // Garante que o id_google foi informado
         if(id_google == undefined || id_google == null || typeof id_google != 'string' || id_google.trim() == ''){
             message.ERROR_BAD_REQUEST.field = '[ID_GOOGLE] INVÁLIDO'
-            return message.ERROR_BAD_REQUEST // 400
+            return message.ERROR_BAD_REQUEST
         }
 
         // 1. Procura o usuário pelo id_google
         let dadosUsuario = await authDAO.selectAuthUsuarioGoogle(id_google)
-        
+
         // 2. Se não encontrou por id_google, mas um e-mail foi enviado no body, verifica se o e-mail já está cadastrado
         if ((!dadosUsuario || dadosUsuario.length < 1) && dados && dados.email && typeof dados.email === 'string' && dados.email.trim() !== '') {
             const email = dados.email.trim()
             let usuarioPorEmail = await authDAO.selectAuthUsuario({ email: email })
             if (usuarioPorEmail && usuarioPorEmail.length > 0) {
                 // Usuário cadastrado sem id_google! Atualiza/salva o id_google para essa conta
-                await knexConex.raw('UPDATE tbl_usuario SET id_google = ? WHERE id = ?', [id_google, usuarioPorEmail[0].id])
+                await authDAO.updateIdGoogleUsuario(id_google, usuarioPorEmail[0].id)
                 dadosUsuario = await authDAO.selectAuthUsuarioGoogle(id_google)
             }
         }

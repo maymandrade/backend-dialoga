@@ -41,6 +41,10 @@ const inserirNovaPaciente = async (paciente,foto_avatar, contentType) => {
             }
 
             paciente.foto_avatar = urlImagem
+        } else if (paciente.foto_avatar && typeof paciente.foto_avatar === 'string' && paciente.foto_avatar.trim() !== '') {
+            paciente.foto_avatar = paciente.foto_avatar.trim()
+        } else {
+            paciente.foto_avatar = null
         }
 
         let resultUsuario = await usuarioController.inserirNovaUsuario(paciente, contentType)

@@ -46,6 +46,10 @@ const inserirNovaProfissional = async (profissional, foto_avatar, contentType) =
             }
 
             profissional.foto_avatar = urlImagem
+        } else if (profissional.foto_avatar && typeof profissional.foto_avatar === 'string' && profissional.foto_avatar.trim() !== '') {
+            profissional.foto_avatar = profissional.foto_avatar.trim()
+        } else {
+            profissional.foto_avatar = null
         }
 
         profissional.id_usuario = resultUsuario.response.usuario.id

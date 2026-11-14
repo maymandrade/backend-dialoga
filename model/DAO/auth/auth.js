@@ -51,6 +51,18 @@ const selectAuthUsuarioGoogle = async (id_google) => {
     return false
 }
 
+// vincula o id_google ao usuario existente pelo id
+const updateIdGoogleUsuario = async (id_google, id) => {
+    let sql = `UPDATE tbl_usuario
+               SET id_google = ?
+               WHERE id = ?`
+    try {
+        let response = await knexConex.raw(sql, [id_google, id])
+        if (response) return response
+    } catch (error) { console.log(error) }
+    return false
+}
+
 // retorna o status de aprovação do profissional ligado ao usuário
 // null  -> sem registro ou pendente (em análise) | 1 -> aprovado | 0 -> recusado
 const selectStatusAprovacaoProfissional = async (idUsuario) => {
@@ -85,6 +97,7 @@ const updateSenhaUsuario = async (id, senha_hash) => {
 module.exports = {
     selectAuthUsuario,
     selectAuthUsuarioGoogle,
+    updateIdGoogleUsuario,
     selectStatusAprovacaoProfissional,
     updateSenhaUsuario
 }

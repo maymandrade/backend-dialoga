@@ -41,8 +41,8 @@ const inserirNovaAnotacao = async (anotacao, idPaciente, token, contentType) => 
         if(!idProfissional) return message.ERROR_NOT_FOUND // 404
 
         const vinculoDAO = require('../../model/DAO/vinculo/vinculo.js')
-        let vinculo = await vinculoDAO.selectByIdPacienteProfissional(idPaciente, idProfissional)
-        if (!vinculo || vinculo.length < 1 || Number(vinculo[0].status) !== 1) {
+        let vinculo = await vinculoDAO.selectVinculoAceito(Number(idPaciente), Number(idProfissional))
+        if (!vinculo || vinculo.length < 1) {
             return {
                 status: false,
                 status_code: 403,
@@ -174,8 +174,8 @@ const listarAnotacaoByIdPaciente = async (token, idPaciente) => {
         if(!idProfissional) return message.ERROR_NOT_FOUND // 404
 
         const vinculoDAO = require('../../model/DAO/vinculo/vinculo.js')
-        let vinculo = await vinculoDAO.selectByIdPacienteProfissional(idPaciente, idProfissional)
-        if (!vinculo || vinculo.length < 1 || Number(vinculo[0].status) !== 1) {
+        let vinculo = await vinculoDAO.selectVinculoAceito(Number(idPaciente), Number(idProfissional))
+        if (!vinculo || vinculo.length < 1) {
             return {
                 status: false,
                 status_code: 403,
